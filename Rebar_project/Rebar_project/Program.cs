@@ -1,3 +1,14 @@
+using FluentAssertions.Common;
+using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Configuration;
+using Rebar_project.DataAccess;
+using Rebar_project.Models;
+using Rebar_project.models;
+
+OrderDataAccess db = new OrderDataAccess();
+await db.AddOrder(new Order("chen",5));
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,3 +34,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

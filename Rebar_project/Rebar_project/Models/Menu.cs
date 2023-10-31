@@ -4,12 +4,12 @@ namespace Rebar_project.Models
 {
     class Menu
     {
-        private List<Shake> shakes = new List<Shake>();
+        private static List<ShakeMenu> _shakes = new List<ShakeMenu>();
 
-        public void AddShake(Shake shake)
+        public void AddShake(ShakeMenu shake)
         {
-            shakes.Add(shake);
-            Console.WriteLine($"Shake '{shake._name}' was successfully added to the menu.");
+            _shakes.Add(shake);
+            Console.WriteLine($"Shake '{shake.NameOfShake}' was successfully added to the menu.");
         }
     }
 }
