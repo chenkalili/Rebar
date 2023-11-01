@@ -34,5 +34,43 @@ namespace Rebar_project.DataAccess
             var result = await menuCollection.FindAsync(_ => true);
             return result.ToList();
         }
+        public async Task<DailyReport> GetDailyReportById(string id)
+        {
+            if (Guid.TryParse(id, out Guid reportId))
+            {
+                var dailyReportCollection = ConnectToMongo<DailyReport>(DailyReportCollection);
+                var filter = Builders<DailyReport>.Filter.Eq(x => x.ReportID, reportId);
+                return await dailyReportCollection.Find(filter).FirstOrDefaultAsync();
+            }
+            else
+            {
+                throw new ArgumentException("Invalid report ID format.");
+            }
+        }
+
+
+        public async Task UpdateDailyReport(DailyReport updatedReport)
+        {
+            var dailyReportCollection = ConnectToMongo<DailyReport>(DailyReportCollection);
+            var filter = Builders<DailyReport>.Filter.Eq(x => x.ReportID, updatedReport.ReportID);
+            var update = Builders<DailyReport>.Update
+                .Set(x => x.SumOrders, updatedReport.SumOrders)
+                .Set(x => x.SumPrice, updatedReport.SumPrice);
+            await dailyReportCollection.UpdateOneAsync(filter, update);
+        }
+
+        public async Task DeleteDailyReport(string id)
+        {
+            if (Guid.TryParse(id, out Guid reportId))
+            {
+                var dailyReportCollection = ConnectToMongo<DailyReport>(DailyReportCollection);
+                var filter = Builders<DailyReport>.Filter.Eq(x => x.ReportID, reportId);
+                await dailyReportCollection.DeleteOneAsync(filter);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid report ID format.");
+            }
+        }
     }
 }

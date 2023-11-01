@@ -4,12 +4,6 @@
     {
         public List<OrderDB> OrderList { get; set; } = new List<OrderDB>();
         public double TotalAmount { get; set; } = 0;
-
-        public Account(List<OrderDB> orderList, double totalAmount) 
-        {
-            OrderList = orderList;
-            TotalAmount = totalAmount;
-        } 
         public Account() { }
 
         public void OrdersTotalPrice()

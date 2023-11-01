@@ -40,5 +40,58 @@ namespace Rebar_project.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        // GET: api/shakes/"1"
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetShakeById(string id)
+        {
+            try
+            {
+                var shake = await ShakeManager.GetShakeById(id);
+                if (shake == null)
+                {
+                    return NotFound();
+                }
+                return Ok(shake);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // PUT: api/shakes/'1'
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateShake(string id, [FromBody] ShakeMenu shake)
+        {
+            try
+            {
+                if (id != shake.ShakeID.ToString())
+                {
+                    return BadRequest("Shake ID in the request does not match the route.");
+                }
+
+                await ShakeManager.UpdateShake(shake);
+                return Ok("Shake updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // DELETE: api/shakes/'1'
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteShake(string id)
+        {
+            try
+            {
+                await ShakeManager.DeleteShake(id);
+                return Ok("Shake deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
