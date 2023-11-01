@@ -7,15 +7,15 @@ namespace Rebar_project.DataAccess
     public class ShakesDataAccess : DataAccess
     {
         private const string ShakeCollection = "Shakes";
-        public async Task<List<Shakes>> GetShakes()
+        public async Task<List<ShakeMenu>> GetShakes()
         {
-            var menuCollection = ConnectToMongo<Shakes>(ShakeCollection);
+            var menuCollection = ConnectToMongo<ShakeMenu>(ShakeCollection);
             var result = await menuCollection.FindAsync(_ => true);
             return result.ToList();
         }
-        public Task AddShake(Shakes menuShake)
+        public Task AddShake(ShakeMenu menuShake)
         {
-            var menuShakeCollection = ConnectToMongo<Shakes>(ShakeCollection);
+            var menuShakeCollection = ConnectToMongo<ShakeMenu>(ShakeCollection);
             return menuShakeCollection.InsertOneAsync(menuShake);
         }
     }

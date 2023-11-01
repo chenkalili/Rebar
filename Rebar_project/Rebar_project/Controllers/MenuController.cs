@@ -11,8 +11,6 @@ namespace Rebar_project.Controllers
     {
         private ShakesDataAccess ShakeManager=new ShakesDataAccess();
 
-        private static List<ShakeMenu> Menu = new List<ShakeMenu>();
-
         // POST: shakesController/Create
         [HttpPost]
         public async Task<ActionResult> Create(ShakeMenu shake)
@@ -20,7 +18,6 @@ namespace Rebar_project.Controllers
             try
             {
                 await ShakeManager.AddShake(shake);
-                Menu.Add(shake);
                 return Ok("Shake added successfully.");
             }
             catch (Exception ex)

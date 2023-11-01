@@ -13,12 +13,12 @@ namespace Rebar_project.Controllers
 
         // POST: OrdersController/Create
         [HttpPost]
-        public async Task<ActionResult> Create(Order order)
+        public async Task<ActionResult> Create([FromBody] CreateOrderModel orderModel)
         {
             try
             {
-                await OrderManager.AddOrder(order);    
-                return Ok("order added successfully.");
+                await OrderManager.AddOrder(orderModel.ShakeOrder, orderModel.Discounts, orderModel.Name);
+                return Ok("Order added successfully.");
             }
             catch (Exception ex)
             {

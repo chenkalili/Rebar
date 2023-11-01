@@ -1,24 +1,35 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using System;
+using System.Collections.Generic;
 using Rebar_project.DataAccess;
+using Rebar_project.models;
+using static Rebar_project.Models.ShakeOrder;
 
 namespace Rebar_project.Models
 {
     public class OrderService
     {
-        Order Order;
+        private Order Order;
+        private OrderDB OrderDB;
 
+        public OrderService() { }
 
-        public OrderService(List<ShakeOrder> shakesList)
-        { 
-
-        }
-        public bool NewOrder(List<ShakeOrder> shakesList, List<Discount> discounts, string name)
+        public void InitData(ShakeOrder shakeOrder, ShakeMenu shakeMenu )
         {
-            if (shakesList.Count > 9 || name == null)
-                return false;
-            Order = new Order(shakesList,name, discounts);
-            //OrderDataAccess orderData = new OrderDataAccess(_order);
-            return true;
+            switch (shakeOrder.Size)
+            {
+                case ChooseSize.S:
+                    shakeOrder.Price = shakeMenu.PriceSmall;
+                    break;
+                case ChooseSize.M:
+                    shakeOrder.Price = shakeMenu.PriceMedium;
+                    break;
+                case ChooseSize.L:
+                    shakeOrder.Price = shakeMenu.PriceLarge;
+                    break;
+                default:
+                    break;
+            }
+            shakeOrder.Description = shakeMenu.Description;
         }
     }
 }

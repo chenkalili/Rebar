@@ -2,13 +2,19 @@
 {
     public class Account
     {
-        public List<Order> OrderList { get; set; } = new List<Order>();
+        public List<OrderDB> OrderList { get; set; } = new List<OrderDB>();
         public double TotalAmount { get; set; } = 0;
 
-        public Account(List<Order> orderList, double totalAmount) 
+        public Account(List<OrderDB> orderList, double totalAmount) 
         {
             OrderList = orderList;
             TotalAmount = totalAmount;
-        }    
+        } 
+        public Account() { }
+
+        public void OrdersTotalPrice()
+        {
+            TotalAmount = OrderList.Sum(order => order.TotalPrice);
+        }
     }
 }

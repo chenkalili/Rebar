@@ -10,40 +10,23 @@ namespace Rebar_project.Models
     public class Order
     {
         [BsonId]
-        public string OrderID { get; set; }
+        public Guid ID { get; set; }
+        public Guid OrderID { get; set; }
         public List<ShakeOrder> ShakeOrders { get; set; } = new List<ShakeOrder>();
         public double TotalPriceOfShakes { get; set; }
         public string CustomerName { get; set; }
         public DateTime OrderDate { get; set; }
         public List<Discount> Discounts { get; set; } = new List<Discount>();
-        public Order(string customerName,double totalPriceOfShakes)
-        {
-            OrderID = Guid.NewGuid().ToString();
-            CustomerName = customerName;
-            TotalPriceOfShakes = totalPriceOfShakes;
-        }
 
-        public Order(List<ShakeOrder> shakesList,string customerName, List<Discount> discounts)
+        public Order(List<ShakeOrder> shakesList,string customerName,double totalPrice, double totalDiscount)
         {
-            OrderID = Guid.NewGuid().ToString();
+            OrderID = Guid.NewGuid();
             CustomerName = customerName;
             ShakeOrders = shakesList;
-            TotalPriceOfShakes = TotalPrice(shakesList);
+            TotalPriceOfShakes = totalPrice;
             OrderDate = DateTime.Now;
-            double discount = TotalDiscount(discounts);
+            double discount = totalDiscount;
             TotalPriceOfShakes = TotalPriceOfShakes / discount;
-        }
-        public double TotalPrice(List<ShakeOrder> shakesList)
-        {
-            double totalPrice = 0;
-            shakesList.ForEach(shakes => { totalPrice += shakes.Price; });
-            return totalPrice;
-        }
-        public double TotalDiscount(List<Discount> discounts)
-        {
-            double totalDiscounts = 0;
-            discounts.ForEach(discount => { totalDiscounts += discount.Percentage; });
-            return totalDiscounts;
         }
     }
 }

@@ -1,37 +1,57 @@
-using FluentAssertions.Common;
-using Microsoft.Extensions.Configuration;
+using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Configuration;
+using Microsoft.OpenApi.Models;  // <-- For Swagger
 using Rebar_project.DataAccess;
-using Rebar_project.Models;
 using Rebar_project.models;
+using Rebar_project.Models;
 
-OrderDataAccess db = new OrderDataAccess();
-await db.AddOrder(new Order("chen",5));
+DailyReportDataAccess accountDataAccess = new DailyReportDataAccess();
+await accountDataAccess.AddDailyReport("1234");
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add your configuration, such as appsettings.json
+builder.Configuration.AddJsonFile("appsettings.json");
 
+// Add services to the container.
+builder.Services.AddSingleton<IMongoClient>(ServiceProvider => new MongoClient(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddTransient<MongoService>();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Add Swagger services
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "RebarAPI", Version = "v1" });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Use exception handling middleware (good for development)
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
+// Use HTTPS redirection
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+// Use Swagger middleware
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "RebarAPI V1");
+});
 
+// Use the routing middleware
+app.UseRouting();
+
+// Configure the routes for your controllers
 app.MapControllers();
 
-app.Run();
+var databaseName = builder.Configuration["ConnectionStrings:DatabaseName"];
+Console.WriteLine($"Using database: {databaseName}");
 
+app.Run();
